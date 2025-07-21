@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 import os
 import re
-from transliterate import translit  # pip install transliterate
+import sys
+from transliterate import translit
 
 def sanitize_filename(filename):
     filename = filename.replace(' ', '-')
@@ -30,6 +33,9 @@ def rename_files_and_directories(root_dir):
                 print(f"Папка: '{old_dir}' -> '{new_dir}'")
 
 if __name__ == "__main__":
-    directory_path = os.getcwd()
-    rename_files_and_directories(directory_path)
+    if len(sys.argv) < 2:
+        print("Укажите папку для переименования!")
+        sys.exit(1)
 
+    directory_path = sys.argv[1]
+    rename_files_and_directories(directory_path)
