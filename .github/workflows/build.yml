@@ -1,4 +1,4 @@
-name: Build EXE
+name: Build EXE with Transliterate Data
 
 on:
   push:
@@ -19,13 +19,19 @@ jobs:
         run: |
           pip install pyinstaller transliterate
 
-      - name: Build EXE
+      - name: Build EXE with transliterate data
         run: |
-          pyinstaller --onefile rename_translit.py
+          set TRANS_DIR=%LOCALAPPDATA%\Programs\Python\Python311\Lib\site-packages\transliterate\contrib\languages
+          pyinstaller --onefile --add-data "%TRANS_DIR%;transliterate/contrib/languages" rename_translit.py
+
+      - name: Copy BAT launcher
+        run: |
+          copy run.bat dist\run.bat
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: rename_translit_windows_x64
-          path: dist/rename_translit.exe
-
+          path: |
+            dist/rename_translit.exe
+            dist/run.bat
